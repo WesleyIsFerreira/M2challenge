@@ -16,7 +16,6 @@ export default createStore({
           total += state.cart[key].price
         }
       })
-      console.log(total)
       return total
     }
   },

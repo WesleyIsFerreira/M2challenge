@@ -109,7 +109,15 @@
         <h3 class="font-semibold text-purple-600">Internet</h3>
         <p>Selecione um plano de internet para continuar</p>
 
-        <div class="flex flex-wrap mt-3">
+        <div v-if="isLoading">
+          <div class="
+            spinner-grow inline-block w-8 h-8 bg-current rounded-full opacity-0
+              text-purple-500
+            " role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        </div>
+        <div v-else class="flex flex-wrap mt-3">
 
           <div class="flex mr-2 mb-2">
             <div class="form-check">
@@ -282,6 +290,7 @@ export default {
     const store = useStore()
 
     let hasNet = ref(false)
+    let isLoading = ref(true)
 
     const fixoList = ref([])
     const tvList = ref([])
@@ -296,7 +305,6 @@ export default {
     watch(
       () => cart.value,
       () => {
-          console.log('MUDOU')
           if(cart.value.internet === ""){
             hasNet.value = false
             cart.value.fixo = ''
@@ -321,17 +329,26 @@ export default {
           else
             internetList.value.push(product)
         })
+        stopLoading()
       })
       .catch(function (error) {
         console.log(error)
+        alert('Erro ao carregar dados')
+        stopLoading()
       })
+
+      function stopLoading(){
+        isLoading.value = false
+      }
 
     return {
       fixoList,
       tvList,
       internetList,
       cart,
-      hasNet
+      hasNet,
+      isLoading,
+      stopLoading
     }
   }
 }
